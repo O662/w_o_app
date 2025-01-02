@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'timer_page.dart';
 import 'countdown_page.dart';
-import 'running_page.dart'; // Import the RunningPage
+import 'runningPage.dart'; // Import the RunningPage
+import 'runningTimerPage.dart'; // Import the TimerPage
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -68,9 +70,14 @@ class _MyHomePageState extends State<MyHomePage> {
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => TimerPage()),
+          );
+        },
+        tooltip: 'Start Timer',
+        child: Icon(Icons.play_arrow),
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
