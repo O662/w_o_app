@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'main.dart'; // Import the main.dart file to access the notification plugin
 
 class CountdownPage extends StatefulWidget {
@@ -50,33 +49,12 @@ class _CountdownPageState extends State<CountdownPage> {
             _counter = int.tryParse(_durationController.text) ?? 10;
           } else {
             _timer!.cancel();
-            _showNotification();
           }
         }
       });
     });
   }
 
-  Future<void> _showNotification() async {
-    const AndroidNotificationDetails androidPlatformChannelSpecifics =
-        AndroidNotificationDetails(
-      'countdown_channel', // Channel ID
-      'Countdown Notifications', // Channel Name
-      channelDescription: 'Notifications for countdown completion', // Channel Description
-      importance: Importance.max,
-      priority: Priority.high,
-      showWhen: false,
-    );
-    const NotificationDetails platformChannelSpecifics =
-        NotificationDetails(android: androidPlatformChannelSpecifics);
-    await flutterLocalNotificationsPlugin.show(
-      0,
-      'Countdown Complete',
-      'The countdown has finished.',
-      platformChannelSpecifics,
-      payload: 'item x',
-    );
-  }
 
   @override
   void dispose() {
