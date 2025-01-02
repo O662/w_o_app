@@ -1,8 +1,23 @@
 import 'package:flutter/material.dart';
-import 'timer_page.dart'; // Import the timer page
-import 'countdown_page.dart'; // Import the countdown page
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'timer_page.dart';
+import 'countdown_page.dart';
 
-void main() {
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  const AndroidInitializationSettings initializationSettingsAndroid =
+      AndroidInitializationSettings('@mipmap/ic_launcher');
+
+  final InitializationSettings initializationSettings = InitializationSettings(
+    android: initializationSettingsAndroid,
+  );
+
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+
   runApp(const MyApp());
 }
 
