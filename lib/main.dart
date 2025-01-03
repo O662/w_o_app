@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'runningPage.dart';
-import 'runningTimerPage.dart';
 import 'impulse.dart'; // Import ImpulsePage
 import 'study.dart'; // Import StudyPage
 import 'routineSelection.dart'; // Import RoutineSelectionPage
+import 'workout.dart'; // Import WorkoutPage
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,21 +36,14 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
   int _selectedIndex = 0;
 
-  static List<Widget> _widgetOptions = <Widget>[
+  static final List<Widget> _widgetOptions = <Widget>[
     HomePage(), // Add the HomePage
-    RunningPage(), // Add the RunningPage
+    WorkoutPage(), // Add the WorkoutPage next to HomePage
     ImpulsePage(), // Add the ImpulsePage
     StudyPage(), // Add the StudyPage
   ];
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -76,8 +68,8 @@ class _MyHomePageState extends State<MyHomePage> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.directions_run),
-            label: 'Running', // Add the Running item
+            icon: Icon(Icons.fitness_center),
+            label: 'Workout', // Add the Workout item next to Home
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.flash_on),

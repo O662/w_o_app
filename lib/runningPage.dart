@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
-import 'runningTimerPage.dart'; // Import the RunningTimerPage
+import 'package:w_o/runningTimerPage.dart';
+import 'runningPlan.dart'; // Import RunningPlanPage
+import 'dart:async'; // Import Timer class
 
 class RunningPage extends StatefulWidget {
   @override
@@ -175,6 +176,16 @@ class _RunningPageState extends State<RunningPage> {
             ElevatedButton(
               onPressed: _startTimer,
               child: Text('Start Timer'),
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => RunningPlanPage()),
+                );
+              },
+              child: Text('Go to Running Plan'),
             ),
           ],
         ),
