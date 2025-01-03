@@ -65,6 +65,17 @@ class _RunningTimerPageState extends State<RunningTimerPage> {
     super.dispose();
   }
 
+  String _formatTime(int seconds) {
+    final int hours = seconds ~/ 3600;
+    final int minutes = (seconds % 3600) ~/ 60;
+    final int remainingSeconds = seconds % 60;
+    if (hours > 0) {
+      return '$hours:${minutes.toString().padLeft(2, '0')}:${remainingSeconds.toString().padLeft(2, '0')}';
+    } else {
+      return '$minutes:${remainingSeconds.toString().padLeft(2, '0')}';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,12 +83,23 @@ class _RunningTimerPageState extends State<RunningTimerPage> {
         title: Text('Running Timer Page'),
       ),
       body: Center(
-        child: Text(
-          _isBreak
-              ? 'Break time left: $_remainingBreakTime seconds'
-              : 'Running time left: $_remainingTime seconds',
-          style: TextStyle(fontSize: 24),
-          textAlign: TextAlign.center,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              _isBreak
+                  ? 'Break time left: ${_formatTime(_remainingBreakTime)}'
+                  : 'Running time left: ${_formatTime(_remainingTime)}',
+              style: TextStyle(fontSize: 24),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 20),
+            Text(
+              'Repetitions left: ${widget.repetitions - _currentRepetition}',
+              style: TextStyle(fontSize: 24),
+              textAlign: TextAlign.center,
+            ),
+          ],
         ),
       ),
     );

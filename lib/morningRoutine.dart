@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
-class ImpulsePage extends StatelessWidget {
+class MorningRoutine extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Impulse Page'),
+        title: Text('Morning Routine'),
       ),
       body: Center(
         child: Text(
-          'Impulse Page Content',
+          'Morning Routine Page Content',
           style: TextStyle(fontSize: 24),
         ),
       ),

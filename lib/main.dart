@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'timer_page.dart';
-import 'countdown_page.dart';
-import 'runningPage.dart'; // Import the RunningPage
-import 'runningTimerPage.dart'; // Import the TimerPage
+import 'runningPage.dart';
+import 'runningTimerPage.dart';
+import 'impulse.dart'; // Import ImpulsePage
+import 'study.dart'; // Import StudyPage
+import 'routineSelection.dart'; // Import RoutineSelectionPage
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -41,10 +41,10 @@ class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
 
   static List<Widget> _widgetOptions = <Widget>[
-    Text('Home Page'),
-    TimerPage(),
-    CountdownPage(),
+    HomePage(), // Add the HomePage
     RunningPage(), // Add the RunningPage
+    ImpulsePage(), // Add the ImpulsePage
+    StudyPage(), // Add the StudyPage
   ];
 
   void _incrementCounter() {
@@ -69,16 +69,6 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => TimerPage()),
-          );
-        },
-        tooltip: 'Start Timer',
-        child: Icon(Icons.play_arrow),
-      ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -86,22 +76,39 @@ class _MyHomePageState extends State<MyHomePage> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.timer),
-            label: 'Timer',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.hourglass_bottom),
-            label: 'Countdown',
-          ),
-          BottomNavigationBarItem(
             icon: Icon(Icons.directions_run),
             label: 'Running', // Add the Running item
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.flash_on),
+            label: 'Impulse', // Add the Impulse item
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.book),
+            label: 'Study', // Add the Study item
           ),
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.deepPurple,
         unselectedItemColor: Colors.grey, // Set the color for unselected items
         onTap: _onItemTapped,
+      ),
+    );
+  }
+}
+
+class HomePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: ElevatedButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => RoutineSelection()),
+          );
+        },
+        child: Text('Go to Routine Selection'),
       ),
     );
   }

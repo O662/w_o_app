@@ -89,39 +89,86 @@ class _RunningPageState extends State<RunningPage> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            TextField(
-              controller: _hoursController,
-              decoration: InputDecoration(labelText: 'Hours'),
-              keyboardType: TextInputType.number,
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _hoursController,
+                    decoration: InputDecoration(
+                      labelText: 'Hours',
+                      border: OutlineInputBorder(),
+                    ),
+                    keyboardType: TextInputType.number,
+                  ),
+                ),
+                SizedBox(width: 10),
+                Expanded(
+                  child: TextField(
+                    controller: _minutesController,
+                    decoration: InputDecoration(
+                      labelText: 'Minutes',
+                      border: OutlineInputBorder(),
+                    ),
+                    keyboardType: TextInputType.number,
+                  ),
+                ),
+                SizedBox(width: 10),
+                Expanded(
+                  child: TextField(
+                    controller: _secondsController,
+                    decoration: InputDecoration(
+                      labelText: 'Seconds',
+                      border: OutlineInputBorder(),
+                    ),
+                    keyboardType: TextInputType.number,
+                  ),
+                ),
+              ],
             ),
-            TextField(
-              controller: _minutesController,
-              decoration: InputDecoration(labelText: 'Minutes'),
-              keyboardType: TextInputType.number,
+            SizedBox(height: 20),
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _breakHoursController,
+                    decoration: InputDecoration(
+                      labelText: 'Break Hours',
+                      border: OutlineInputBorder(),
+                    ),
+                    keyboardType: TextInputType.number,
+                  ),
+                ),
+                SizedBox(width: 10),
+                Expanded(
+                  child: TextField(
+                    controller: _breakMinutesController,
+                    decoration: InputDecoration(
+                      labelText: 'Break Minutes',
+                      border: OutlineInputBorder(),
+                    ),
+                    keyboardType: TextInputType.number,
+                  ),
+                ),
+                SizedBox(width: 10),
+                Expanded(
+                  child: TextField(
+                    controller: _breakSecondsController,
+                    decoration: InputDecoration(
+                      labelText: 'Break Seconds',
+                      border: OutlineInputBorder(),
+                    ),
+                    keyboardType: TextInputType.number,
+                  ),
+                ),
+              ],
             ),
-            TextField(
-              controller: _secondsController,
-              decoration: InputDecoration(labelText: 'Seconds'),
-              keyboardType: TextInputType.number,
-            ),
-            TextField(
-              controller: _breakHoursController,
-              decoration: InputDecoration(labelText: 'Break Hours'),
-              keyboardType: TextInputType.number,
-            ),
-            TextField(
-              controller: _breakMinutesController,
-              decoration: InputDecoration(labelText: 'Break Minutes'),
-              keyboardType: TextInputType.number,
-            ),
-            TextField(
-              controller: _breakSecondsController,
-              decoration: InputDecoration(labelText: 'Break Seconds'),
-              keyboardType: TextInputType.number,
-            ),
+            SizedBox(height: 20),
             TextField(
               controller: _repetitionController,
-              decoration: InputDecoration(labelText: 'Repetitions'),
+              decoration: InputDecoration(
+                labelText: 'Repetitions',
+                border: OutlineInputBorder(),
+              ),
               keyboardType: TextInputType.number,
             ),
             SizedBox(height: 20),
