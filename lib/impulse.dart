@@ -110,7 +110,21 @@ class _ImpulsePageState extends State<ImpulsePage> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Results'),
-          content: Text('Necessity score: ${percentageScore.toStringAsFixed(2)}%\n\n$recommendation\n\nPros: $proCount\nCons: $conCount\n\n$additionalConsiderations'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: [
+                Text('Necessity score: ${percentageScore.toStringAsFixed(2)}%'),
+                SizedBox(height: 10),
+                Text(recommendation),
+                SizedBox(height: 10),
+                Text('Pros: $proCount'),
+                Text('Cons: $conCount'),
+                SizedBox(height: 10),
+                Text('Considerations:'),
+                Text(additionalConsiderations),
+              ],
+            ),
+          ),
           actions: [
             TextButton(
               onPressed: () {
@@ -178,7 +192,7 @@ class _ImpulsePageState extends State<ImpulsePage> {
                                     'Yes',
                                     style: TextStyle(
                                       color: _responses[index] == true
-                                          ? Colors.green
+                                          ? (index == 2 || index == 7 ? Colors.red : Colors.green)
                                           : Colors.black,
                                     ),
                                   ),
@@ -193,7 +207,7 @@ class _ImpulsePageState extends State<ImpulsePage> {
                                     'No',
                                     style: TextStyle(
                                       color: _responses[index] == false
-                                          ? Colors.red
+                                          ? (index == 2 || index == 7 ? Colors.green : Colors.red)
                                           : Colors.black,
                                     ),
                                   ),
