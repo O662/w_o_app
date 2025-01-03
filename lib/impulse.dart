@@ -28,6 +28,8 @@ class _ImpulsePageState extends State<ImpulsePage> {
   void _submitResponses() {
     int totalScore = 0;
     int maxScore = 0;
+    int proCount = 0;
+    int conCount = 0;
     String additionalConsiderations = '';
 
     for (int i = 0; i < _responses.length; i++) {
@@ -35,10 +37,19 @@ class _ImpulsePageState extends State<ImpulsePage> {
       final response = _responses[i];
 
       if (response != null) {
+        int points = 0;
         if (question['type'] == 'yesno') {
-          totalScore += question['points'][response ? 'yes' : 'no'] as int;
+          points = question['points'][response ? 'yes' : 'no'] as int;
         } else if (question['type'] == 'custom') {
-          totalScore += question['points'][response] as int;
+          points = question['points'][response] as int;
+        }
+        totalScore += points;
+
+        // Update pro and con counts
+        if (points > 0) {
+          proCount++;
+        } else {
+          conCount++;
         }
 
         // Add additional considerations based on specific responses
@@ -99,7 +110,7 @@ class _ImpulsePageState extends State<ImpulsePage> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Results'),
-          content: Text('Necessity score: ${percentageScore.toStringAsFixed(2)}%\n\n$recommendation\n\n$additionalConsiderations'),
+          content: Text('Necessity score: ${percentageScore.toStringAsFixed(2)}%\n\n$recommendation\n\nPros: $proCount\nCons: $conCount\n\n$additionalConsiderations'),
           actions: [
             TextButton(
               onPressed: () {
