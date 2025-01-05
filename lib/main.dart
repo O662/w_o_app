@@ -3,6 +3,8 @@ import 'impulse.dart'; // Import ImpulsePage
 import 'study.dart'; // Import StudyPage
 import 'routineSelection.dart'; // Import RoutineSelectionPage
 import 'workout.dart'; // Import WorkoutPage
+import 'info_page.dart'; // Import InfoPage
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,7 +19,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'MyApp',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 58, 183, 143)),
+        colorScheme: ColorScheme.fromSeed(
+            seedColor: const Color.fromARGB(255, 58, 183, 143)),
         useMaterial3: true,
       ),
       home: const MyHomePage(title: 'MyApp'),
@@ -43,6 +46,7 @@ class _MyHomePageState extends State<MyHomePage> {
     WorkoutPage(), // Add the WorkoutPage next to HomePage
     ImpulsePage(), // Add the ImpulsePage
     StudyPage(), // Add the StudyPage
+    InfoPage(), // Add the InfoPage
   ];
 
   void _onItemTapped(int index) {
@@ -79,6 +83,10 @@ class _MyHomePageState extends State<MyHomePage> {
             icon: Icon(Icons.book),
             label: 'Study', // Add the Study item
           ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.info),
+            label: 'Info',
+          ),
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.deepPurple,
@@ -89,7 +97,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class HomePage extends StatelessWidget {
+class HomePageButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -102,6 +110,71 @@ class HomePage extends StatelessWidget {
         },
         child: Text('Go to Routine Selection'),
       ),
+    );
+  }
+}
+
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  String _greetingMessage = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserName();
+  }
+
+  Future<void> _loadUserName() async {
+    final prefs = await SharedPreferences.getInstance();
+    final name = prefs.getString('name') ?? '';
+    setState(() {
+      _greetingMessage = _getGreetingMessage(name);
+    });
+  }
+
+  String _getGreetingMessage(String name) {
+    final hour = DateTime.now().hour;
+    String greeting;
+    if (hour < 12) {
+      greeting = 'Good morning';
+    } else if (hour < 18) {
+      greeting = 'Good afternoon';
+    } else {
+      greeting = 'Good evening';
+    }
+    return name.isNotEmpty ? '$greeting, $name.' : '$greeting.';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Align(
+          alignment: Alignment.topLeft,
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(
+              _greetingMessage,
+              style: TextStyle(fontSize: 24),
+            ),
+          ),
+        ),
+        Center(
+          child: ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => RoutineSelection()),
+              );
+            },
+            child: Text('Go to Routine Selection'),
+          ),
+        ),
+      ],
     );
   }
 }
