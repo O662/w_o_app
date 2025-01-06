@@ -51,7 +51,9 @@ class _ProfilePageState extends State<ProfilePage> {
                       radius: 40,
                       backgroundImage: _profileImage != null
                           ? FileImage(_profileImage!)
-                          : AssetImage('assets/icon/profile_pictures/default_profile_picture.png') as ImageProvider,
+                          : AssetImage(
+                                  'assets/icon/profile_pictures/default_profile_picture.png')
+                              as ImageProvider,
                     ),
                   ),
                   SizedBox(width: 16),
@@ -60,11 +62,13 @@ class _ProfilePageState extends State<ProfilePage> {
                     children: [
                       Text(
                         _firstName,
-                        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 24, fontWeight: FontWeight.bold),
                       ),
                       Text(
                         _lastName,
-                        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 24, fontWeight: FontWeight.bold),
                       ),
                     ],
                   ),
@@ -73,25 +77,35 @@ class _ProfilePageState extends State<ProfilePage> {
               SizedBox(height: 16),
               TabBar(
                 tabs: [
-                  Tab(text: 'Tab 1'),
+                  Tab(text: 'Profile'),
                   Tab(text: 'Settings'),
                 ],
               ),
               Expanded(
                 child: TabBarView(
                   children: [
-                    Center(child: Text('Content for Tab 1')),
                     Center(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => InfoPage()),
-                          );
-                        },
-                        child: Text('Go to Info Page'),
+                      child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => InfoPage()),
+                                );
+                              },
+                              child: Text('Edit Profile.'),
+                            ),
+                          ),
+                        ),
                       ),
                     ),
+                    Center(child: Text('Content for Tab 2')),
                   ],
                 ),
               ),
