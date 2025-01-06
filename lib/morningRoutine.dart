@@ -16,7 +16,7 @@ class _MorningRoutineState extends State<MorningRoutine> {
   Color _backgroundColor = Colors.white;
   File? _backgroundImage;
   final ImagePicker _picker = ImagePicker();
-  List<bool> _isExpandedList = [false];
+  List<bool> _isExpandedList = [true];
 
   @override
   void initState() {

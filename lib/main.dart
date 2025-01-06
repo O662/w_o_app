@@ -4,6 +4,7 @@ import 'study.dart'; // Import StudyPage
 import 'routineSelection.dart'; // Import RoutineSelectionPage
 import 'workout.dart'; // Import WorkoutPage
 import 'info_page.dart'; // Import InfoPage
+import 'profile_page.dart'; // Import the ProfilePage
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
@@ -23,16 +24,14 @@ class MyApp extends StatelessWidget {
             seedColor: const Color.fromARGB(255, 58, 183, 143)),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'MyApp'),
+      home: const MyHomePage(),
       debugShowCheckedModeBanner: false, // Remove the debug banner
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
+  const MyHomePage({super.key});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -49,6 +48,14 @@ class _MyHomePageState extends State<MyHomePage> {
     InfoPage(), // Add the InfoPage
   ];
 
+  static final List<String> _pageTitles = <String>[
+    'Home',
+    'Workout',
+    'Impulse',
+    'Study',
+    'Info',
+  ];
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -59,8 +66,18 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
+        title: Text(_pageTitles[_selectedIndex]),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.account_circle), // Change the icon here
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ProfilePage()),
+              );
+            },
+          ),
+        ],
       ),
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
@@ -89,7 +106,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.deepPurple,
+        selectedItemColor: Theme.of(context).colorScheme.primary,
         unselectedItemColor: Colors.grey, // Set the color for unselected items
         onTap: _onItemTapped,
       ),
