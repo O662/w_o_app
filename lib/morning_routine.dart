@@ -6,6 +6,8 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
 class MorningRoutine extends StatefulWidget {
+  const MorningRoutine({super.key});
+
   @override
   _MorningRoutineState createState() => _MorningRoutineState();
 }
@@ -16,7 +18,7 @@ class _MorningRoutineState extends State<MorningRoutine> {
   Color _backgroundColor = Colors.white;
   File? _backgroundImage;
   final ImagePicker _picker = ImagePicker();
-  List<bool> _isExpandedList = [true];
+  final List<bool> _isExpandedList = [true];
 
   @override
   void initState() {

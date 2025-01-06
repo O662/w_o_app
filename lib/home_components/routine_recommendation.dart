@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class RoutineRecommendation extends StatefulWidget {
+  const RoutineRecommendation({super.key});
+
   @override
   _RoutineRecommendationState createState() => _RoutineRecommendationState();
 }

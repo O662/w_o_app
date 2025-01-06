@@ -4,6 +4,8 @@ import 'package:w_o/signup_page.dart';
 import 'package:w_o/login_page.dart';
 
 class QuickActionRow extends StatelessWidget {
+  const QuickActionRow({super.key});
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(

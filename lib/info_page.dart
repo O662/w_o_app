@@ -4,6 +4,8 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
 class InfoPage extends StatefulWidget {
+  const InfoPage({super.key});
+
   @override
   _InfoPageState createState() => _InfoPageState();
 }

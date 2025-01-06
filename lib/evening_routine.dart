@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class EveningRoutine extends StatelessWidget {
+  const EveningRoutine({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class ImpulsePage extends StatefulWidget {
+  const ImpulsePage({super.key});
+
   @override
   _ImpulsePageState createState() => _ImpulsePageState();
 }
@@ -122,7 +124,7 @@ class _ImpulsePageState extends State<ImpulsePage> {
                 Text('Cons: $conCount'),
                 SizedBox(height: 10),
                 Text('Considerations:'),
-                ...additionalConsiderations.map((consideration) => Text('• $consideration')).toList(),
+                ...additionalConsiderations.map((consideration) => Text('• $consideration')),
               ],
             ),
           ),
