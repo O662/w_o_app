@@ -100,12 +100,48 @@ class _ProfilePageState extends State<ProfilePage> {
                                 );
                               },
                               child: Text('Edit Profile.'),
+                              style: ElevatedButton.styleFrom(
+                                minimumSize: Size(double.infinity,
+                                    50), // Set the height to 50
+                                shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.circular(5), // Rounded edges
+                                ),
+                              ),
                             ),
                           ),
                         ),
                       ),
                     ),
-                    Center(child: Text('Content for Tab 2')),
+                    Center(
+                      child: Align(
+                        alignment: Alignment.topCenter,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => InfoPage()),
+                                );
+                              },
+                              child: Text('App Settings.'),
+                              style: ElevatedButton.styleFrom(
+                                minimumSize: Size(double.infinity,
+                                    100), // Set the height to 50
+                                shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.circular(5), // Rounded edges
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
