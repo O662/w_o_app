@@ -3,8 +3,11 @@ import 'impulse.dart'; // Import ImpulsePage
 import 'study.dart'; // Import StudyPage
 import 'routineSelection.dart'; // Import RoutineSelectionPage
 import 'workout.dart'; // Import WorkoutPage
-import 'info_page.dart'; // Import InfoPage
 import 'profile_page.dart'; // Import the ProfilePage
+import 'signup_page.dart'; // Import SignupPage
+import 'login_page.dart'; // Import LoginPage
+import 'home_components/routine_recommendation.dart';
+import 'home_components/quick_action_row.dart'; // Import QuickActionRow
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io';
 
@@ -92,7 +95,8 @@ class _MyHomePageState extends State<MyHomePage> {
       greeting = 'Good evening';
     }
     setState(() {
-      _greetingMessage = firstName.isNotEmpty ? '$greeting, $firstName.' : '$greeting.';
+      _greetingMessage =
+          firstName.isNotEmpty ? '$greeting, $firstName.' : '$greeting.';
     });
   }
 
@@ -118,7 +122,9 @@ class _MyHomePageState extends State<MyHomePage> {
               radius: 20,
               backgroundImage: _profileImage != null
                   ? FileImage(_profileImage!)
-                  : AssetImage('assets/icon/profile_pictures/default_profile_picture.png') as ImageProvider,
+                  : AssetImage(
+                          'assets/icon/profile_pictures/default_profile_picture.png')
+                      as ImageProvider,
             ),
             onPressed: () {
               Navigator.push(
@@ -189,7 +195,8 @@ class _HomePageState extends State<HomePage> {
       greeting = 'Good evening';
     }
     setState(() {
-      _greetingMessage = firstName.isNotEmpty ? '$greeting, $firstName.' : '$greeting.';
+      _greetingMessage =
+          firstName.isNotEmpty ? '$greeting, $firstName.' : '$greeting.';
     });
   }
 
@@ -219,26 +226,18 @@ class _HomePageState extends State<HomePage> {
                   style: TextStyle(fontSize: 24),
                 ),
                 SizedBox(height: 8),
-                Row(
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => RoutineSelection()),
-                        );
-                      },
-                      child: Text('Routines'),
-                    ),
-                    // Add more buttons here if needed
-                  ],
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: QuickActionRow(), // Use the QuickActionRow widget here
                 ),
                 SizedBox(height: 16),
                 GestureDetector(
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => RoutineSelection()), // Replace with your evening routine page
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              RoutineSelection()), // Replace with your evening routine page
                     );
                   },
                   child: Card(
@@ -246,13 +245,16 @@ class _HomePageState extends State<HomePage> {
                       padding: const EdgeInsets.all(16.0),
                       child: Column(
                         children: [
-                          if (DateTime.now().hour >= 18 || DateTime.now().hour < 3)
+                          if (DateTime.now().hour >= 18 ||
+                              DateTime.now().hour < 3)
                             AspectRatio(
-                              aspectRatio: 2 / 1, // Width to height ratio of 2:1
+                              aspectRatio:
+                                  2 / 1, // Width to height ratio of 2:1
                               child: Container(
                                 decoration: BoxDecoration(
                                   image: DecorationImage(
-                                    image: AssetImage('assets/icon/routine_images/night.png'),
+                                    image: AssetImage(
+                                        'assets/icon/routine_images/night.png'),
                                     fit: BoxFit.cover,
                                   ),
                                 ),
