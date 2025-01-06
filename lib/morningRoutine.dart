@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
 class MorningRoutine extends StatefulWidget {
   @override
@@ -10,11 +13,16 @@ class MorningRoutine extends StatefulWidget {
 class _MorningRoutineState extends State<MorningRoutine> {
   final List<Map<String, dynamic>> _incompleteTasks = [];
   final List<Map<String, dynamic>> _completedTasks = [];
+  Color _backgroundColor = Colors.white;
+  File? _backgroundImage;
+  final ImagePicker _picker = ImagePicker();
 
   @override
   void initState() {
     super.initState();
     _loadTasks();
+    _loadBackgroundColor();
+    _loadBackgroundImage();
   }
 
   Future<void> _loadTasks() async {
@@ -39,6 +47,46 @@ class _MorningRoutineState extends State<MorningRoutine> {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('incompleteTasks', json.encode(_incompleteTasks));
     await prefs.setString('completedTasks', json.encode(_completedTasks));
+  }
+
+  Future<void> _loadBackgroundColor() async {
+    final prefs = await SharedPreferences.getInstance();
+    final int? colorValue = prefs.getInt('backgroundColor');
+    if (colorValue != null) {
+      setState(() {
+        _backgroundColor = Color(colorValue);
+      });
+    }
+  }
+
+  Future<void> _saveBackgroundColor(Color color) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('backgroundColor', color.value);
+  }
+
+  Future<void> _loadBackgroundImage() async {
+    final prefs = await SharedPreferences.getInstance();
+    final String? imagePath = prefs.getString('backgroundImage');
+    if (imagePath != null) {
+      setState(() {
+        _backgroundImage = File(imagePath);
+      });
+    }
+  }
+
+  Future<void> _saveBackgroundImage(String path) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('backgroundImage', path);
+  }
+
+  Future<void> _pickImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _backgroundImage = File(pickedFile.path);
+        _saveBackgroundImage(pickedFile.path);
+      });
+    }
   }
 
   void _toggleTaskCompletion(int index) {
@@ -109,6 +157,90 @@ class _MorningRoutineState extends State<MorningRoutine> {
     );
   }
 
+  void _showThemeDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Select Background Color'),
+          content: SingleChildScrollView(
+            child: BlockPicker(
+              pickerColor: _backgroundColor,
+              onColorChanged: (Color color) {
+                setState(() {
+                  _backgroundColor = color;
+                  _saveBackgroundColor(color);
+                });
+                Navigator.of(context).pop();
+              },
+              availableColors: [
+                Colors.white,
+                Colors.red,
+                Colors.green,
+                Colors.blue,
+                Colors.yellow,
+                Colors.orange,
+                Colors.purple,
+                Colors.pink,
+                Colors.brown,
+                Colors.grey,
+                Colors.black,
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showImagePickerDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Select Background Image'),
+          content: SingleChildScrollView(
+            child: Column(
+              children: [
+                ElevatedButton(
+                  onPressed: _pickImage,
+                  child: Text('Upload Image'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      _backgroundImage = null;
+                      _saveBackgroundImage('');
+                    });
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Remove Image'),
+                ),
+                // Add more buttons for selecting images from assets if needed
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -116,84 +248,116 @@ class _MorningRoutineState extends State<MorningRoutine> {
         title: Text('Morning Routine'),
         actions: [
           IconButton(
-            icon: Icon(Icons.undo),
-            onPressed: _uncompleteAllTasks,
-          ),
-          IconButton(
             icon: Icon(Icons.add),
             onPressed: _showAddTaskDialog,
           ),
+          PopupMenuButton<String>(
+            onSelected: (String result) {
+              if (result == 'Undo') {
+                _uncompleteAllTasks();
+              } else if (result == 'Theme') {
+                _showThemeDialog();
+              } else if (result == 'Image') {
+                _showImagePickerDialog();
+              }
+            },
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+              const PopupMenuItem<String>(
+                value: 'Undo',
+                child: Text('Undo All Tasks'),
+              ),
+              const PopupMenuItem<String>(
+                value: 'Theme',
+                child: Text('Theme'),
+              ),
+              const PopupMenuItem<String>(
+                value: 'Image',
+                child: Text('Background Image'),
+              ),
+            ],
+          ),
         ],
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              itemCount: _incompleteTasks.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  leading: Checkbox(
-                    value: _incompleteTasks[index]['completed'],
-                    onChanged: (bool? value) {
-                      _toggleTaskCompletion(index);
-                    },
-                  ),
-                  title: Text(_incompleteTasks[index]['name']),
-                );
-              },
-            ),
-          ),
-          Divider(),
-          Text(
-            'Completed Tasks',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: _completedTasks.length,
-              itemBuilder: (context, index) {
-                return Dismissible(
-                  key: Key(_completedTasks[index]['name']),
-                  onDismissed: (direction) {
-                    final task = _completedTasks[index];
-                    _toggleTaskIncompletion(index);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Task marked as incomplete'),
-                        action: SnackBarAction(
-                          label: 'Undo',
-                          onPressed: () {
-                            setState(() {
-                              _completedTasks.insert(index, task);
-                              _incompleteTasks.remove(task);
-                              task['completed'] = true;
-                              _saveTasks();
-                            });
-                          },
-                        ),
-                      ),
-                    );
-                  },
-                  background: Container(color: Colors.red),
-                  child: ListTile(
+      body: Container(
+        decoration: BoxDecoration(
+          color: _backgroundColor,
+          image: _backgroundImage != null
+              ? DecorationImage(
+                  image: FileImage(_backgroundImage!),
+                  fit: BoxFit.cover,
+                )
+              : null,
+        ),
+        child: Column(
+          children: [
+            Expanded(
+              child: ListView.builder(
+                itemCount: _incompleteTasks.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
                     leading: Checkbox(
-                      value: _completedTasks[index]['completed'],
+                      value: _incompleteTasks[index]['completed'],
                       onChanged: (bool? value) {
-                        _toggleTaskIncompletion(index);
+                        _toggleTaskCompletion(index);
                       },
                     ),
-                    title: Text(
-                      _completedTasks[index]['name'],
-                      style: TextStyle(
-                        decoration: TextDecoration.lineThrough,
+                    title: Text(_incompleteTasks[index]['name']),
+                  );
+                },
+              ),
+            ),
+            Divider(),
+            Text(
+              'Completed Tasks',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: _completedTasks.length,
+                itemBuilder: (context, index) {
+                  return Dismissible(
+                    key: Key(_completedTasks[index]['name']),
+                    onDismissed: (direction) {
+                      final task = _completedTasks[index];
+                      _toggleTaskIncompletion(index);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Task marked as incomplete'),
+                          action: SnackBarAction(
+                            label: 'Undo',
+                            onPressed: () {
+                              setState(() {
+                                _completedTasks.insert(index, task);
+                                _incompleteTasks.remove(task);
+                                task['completed'] = true;
+                                _saveTasks();
+                              });
+                            },
+                          ),
+                        ),
+                      );
+                    },
+                    background: Container(color: Colors.red),
+                    child: ListTile(
+                      leading: Checkbox(
+                        value: _completedTasks[index]['completed'],
+                        onChanged: (bool? value) {
+                          _toggleTaskIncompletion(index);
+                        },
+                      ),
+                      title: Text(
+                        _completedTasks[index]['name'],
+                        style: TextStyle(
+                          decoration: TextDecoration.lineThrough,
+                        ),
                       ),
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

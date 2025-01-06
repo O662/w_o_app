@@ -13,6 +13,8 @@ dependencies:
     sdk: flutter
   shared_preferences: ^2.0.6
   cupertino_icons: ^1.0.8
+  flutter_colorpicker: ^1.0.3
+  image_picker: ^0.8.4+4
 
 dev_dependencies:
   flutter_test:
