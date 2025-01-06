@@ -6,6 +6,7 @@ import 'workout.dart'; // Import WorkoutPage
 import 'info_page.dart'; // Import InfoPage
 import 'profile_page.dart'; // Import the ProfilePage
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:io';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,13 +40,13 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
+  File? _profileImage;
 
   static final List<Widget> _widgetOptions = <Widget>[
     HomePage(), // Add the HomePage
     WorkoutPage(), // Add the WorkoutPage next to HomePage
     ImpulsePage(), // Add the ImpulsePage
     StudyPage(), // Add the StudyPage
-    InfoPage(), // Add the InfoPage
   ];
 
   static final List<String> _pageTitles = <String>[
@@ -53,13 +54,39 @@ class _MyHomePageState extends State<MyHomePage> {
     'Workout',
     'Impulse',
     'Study',
-    'Info',
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserInfo();
+  }
+
+  Future<void> _loadUserInfo() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? profileImagePath = prefs.getString('profileImage');
+    if (profileImagePath != null) {
+      setState(() {
+        _profileImage = File(profileImagePath);
+      });
+    }
+  }
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  String _getRoutineRecommendation() {
+    final hour = DateTime.now().hour;
+    if (hour >= 3 && hour < 10) {
+      return 'We recommend starting your morning routine!';
+    } else if (hour >= 18 || hour < 3) {
+      return 'We recommend starting your evening routine!';
+    } else {
+      return 'No specific routine recommended at this time.';
+    }
   }
 
   @override
@@ -69,7 +96,12 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(_pageTitles[_selectedIndex]),
         actions: [
           IconButton(
-            icon: Icon(Icons.account_circle), // Change the icon here
+            icon: CircleAvatar(
+              radius: 20,
+              backgroundImage: _profileImage != null
+                  ? FileImage(_profileImage!)
+                  : AssetImage('assets/icon/profile_pictures/default_profile_picture.png') as ImageProvider,
+            ),
             onPressed: () {
               Navigator.push(
                 context,
@@ -90,42 +122,21 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.fitness_center),
-            label: 'Workout', // Add the Workout item next to Home
+            label: 'Workout',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.flash_on),
-            label: 'Impulse', // Add the Impulse item
+            label: 'Impulse',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.book),
-            label: 'Study', // Add the Study item
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.info),
-            label: 'Info',
+            label: 'Study',
           ),
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Theme.of(context).colorScheme.primary,
         unselectedItemColor: Colors.grey, // Set the color for unselected items
         onTap: _onItemTapped,
-      ),
-    );
-  }
-}
-
-class HomePageButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: ElevatedButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => RoutineSelection()),
-          );
-        },
-        child: Text('Go to Routine Selection'),
       ),
     );
   }
@@ -138,22 +149,18 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String _greetingMessage = '';
+  String _routineRecommendation = '';
 
   @override
   void initState() {
     super.initState();
-    _loadUserName();
+    _loadGreetingMessage();
+    _routineRecommendation = _getRoutineRecommendation();
   }
 
-  Future<void> _loadUserName() async {
+  Future<void> _loadGreetingMessage() async {
     final prefs = await SharedPreferences.getInstance();
-    final name = prefs.getString('name') ?? '';
-    setState(() {
-      _greetingMessage = _getGreetingMessage(name);
-    });
-  }
-
-  String _getGreetingMessage(String name) {
+    final firstName = prefs.getString('firstName') ?? '';
     final hour = DateTime.now().hour;
     String greeting;
     if (hour < 12) {
@@ -163,35 +170,69 @@ class _HomePageState extends State<HomePage> {
     } else {
       greeting = 'Good evening';
     }
-    return name.isNotEmpty ? '$greeting, $name.' : '$greeting.';
+    setState(() {
+      _greetingMessage = firstName.isNotEmpty ? '$greeting, $firstName.' : '$greeting.';
+    });
+  }
+
+  String _getRoutineRecommendation() {
+    final hour = DateTime.now().hour;
+    if (hour >= 3 && hour < 10) {
+      return 'We recommend starting your morning routine!';
+    } else if (hour >= 18 || hour < 3) {
+      return "It's getting late. \nWe recommend starting your evening routine!";
+    } else {
+      return 'No specific routine recommended at this time.';
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Align(
-          alignment: Alignment.topLeft,
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text(
-              _greetingMessage,
-              style: TextStyle(fontSize: 24),
+    return Scaffold(
+      body: Stack(
+        children: [
+          Align(
+            alignment: Alignment.topLeft,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    _greetingMessage,
+                    style: TextStyle(fontSize: 24),
+                  ),
+                  SizedBox(height: 8),
+                  Row(
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => RoutineSelection()),
+                          );
+                        },
+                        child: Text('Routines'),
+                      ),
+                      // Add more buttons here if needed
+                    ],
+                  ),
+                  SizedBox(height: 16),
+                  Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Text(
+                        _routineRecommendation,
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-        Center(
-          child: ElevatedButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => RoutineSelection()),
-              );
-            },
-            child: Text('Go to Routine Selection'),
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
