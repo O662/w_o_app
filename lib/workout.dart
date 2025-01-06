@@ -9,7 +9,6 @@ class WorkoutPage extends StatelessWidget {
       length: 4, // Number of tabs
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Workout'),
           bottom: TabBar(
             tabs: [
               Tab(text: 'Schedule'),
