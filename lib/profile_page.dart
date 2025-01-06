@@ -4,6 +4,8 @@ import 'dart:io';
 import 'info_page.dart'; // Import the InfoPage
 
 class ProfilePage extends StatefulWidget {
+  const ProfilePage({super.key});
+
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
@@ -99,7 +101,6 @@ class _ProfilePageState extends State<ProfilePage> {
                                       builder: (context) => InfoPage()),
                                 );
                               },
-                              child: Text('Edit Profile.'),
                               style: ElevatedButton.styleFrom(
                                 minimumSize: Size(double.infinity,
                                     50), // Set the height to 50
@@ -108,6 +109,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                       BorderRadius.circular(5), // Rounded edges
                                 ),
                               ),
+                              child: Text('Edit Profile.'),
                             ),
                           ),
                         ),
@@ -128,7 +130,6 @@ class _ProfilePageState extends State<ProfilePage> {
                                       builder: (context) => InfoPage()),
                                 );
                               },
-                              child: Text('App Settings.'),
                               style: ElevatedButton.styleFrom(
                                 minimumSize: Size(double.infinity,
                                     100), // Set the height to 50
@@ -137,6 +138,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                       BorderRadius.circular(5), // Rounded edges
                                 ),
                               ),
+                              child: Text('App Settings.'),
                             ),
                           ),
                         ),

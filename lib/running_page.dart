@@ -4,6 +4,8 @@ import 'running_plan.dart'; // Import RunningPlanPage
 import 'dart:async'; // Import Timer class
 
 class RunningPage extends StatefulWidget {
+  const RunningPage({super.key});
+
   @override
   _RunningPageState createState() => _RunningPageState();
 }

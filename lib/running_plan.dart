@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class RunningPlanPage extends StatelessWidget {
+  const RunningPlanPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -257,7 +259,7 @@ class WeekExpansionTile extends StatelessWidget {
   final int weekNumber;
   final List<Widget> content;
 
-  WeekExpansionTile({required this.weekNumber, required this.content});
+  const WeekExpansionTile({super.key, required this.weekNumber, required this.content});
 
   @override
   Widget build(BuildContext context) {

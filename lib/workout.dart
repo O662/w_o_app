@@ -3,6 +3,8 @@ import 'running_page.dart'; // Import RunningPage
 import 'running_plan.dart'; // Import RunningPlanPage
 
 class WorkoutPage extends StatelessWidget {
+  const WorkoutPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(

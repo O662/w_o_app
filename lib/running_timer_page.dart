@@ -6,7 +6,7 @@ class RunningTimerPage extends StatefulWidget {
   final int breakDuration;
   final int repetitions;
 
-  RunningTimerPage({
+  const RunningTimerPage({super.key, 
     required this.duration,
     required this.breakDuration,
     required this.repetitions,
