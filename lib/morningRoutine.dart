@@ -16,6 +16,7 @@ class _MorningRoutineState extends State<MorningRoutine> {
   Color _backgroundColor = Colors.white;
   File? _backgroundImage;
   final ImagePicker _picker = ImagePicker();
+  List<bool> _isExpandedList = [false];
 
   @override
   void initState() {
@@ -307,53 +308,70 @@ class _MorningRoutineState extends State<MorningRoutine> {
               ),
             ),
             Divider(),
-            Text(
-              'Completed Tasks',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
             Expanded(
-              child: ListView.builder(
-                itemCount: _completedTasks.length,
-                itemBuilder: (context, index) {
-                  return Dismissible(
-                    key: Key(_completedTasks[index]['name']),
-                    onDismissed: (direction) {
-                      final task = _completedTasks[index];
-                      _toggleTaskIncompletion(index);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('Task marked as incomplete'),
-                          action: SnackBarAction(
-                            label: 'Undo',
-                            onPressed: () {
-                              setState(() {
-                                _completedTasks.insert(index, task);
-                                _incompleteTasks.remove(task);
-                                task['completed'] = true;
-                                _saveTasks();
-                              });
-                            },
+              child: SingleChildScrollView(
+                child: ExpansionPanelList(
+                  expansionCallback: (int index, bool isExpanded) {
+                    setState(() {
+                      _isExpandedList[index] = !isExpanded;
+                    });
+                  },
+                  children: [
+                    ExpansionPanel(
+                      headerBuilder: (BuildContext context, bool isExpanded) {
+                        return ListTile(
+                          title: Text(
+                            'Completed Tasks',
+                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                           ),
-                        ),
-                      );
-                    },
-                    background: Container(color: Colors.red),
-                    child: ListTile(
-                      leading: Checkbox(
-                        value: _completedTasks[index]['completed'],
-                        onChanged: (bool? value) {
-                          _toggleTaskIncompletion(index);
-                        },
+                        );
+                      },
+                      body: Column(
+                        children: _completedTasks.map((task) {
+                          int index = _completedTasks.indexOf(task);
+                          return Dismissible(
+                            key: Key('${task['name']}_$index'),
+                            onDismissed: (direction) {
+                              _toggleTaskIncompletion(index);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Task marked as incomplete'),
+                                  action: SnackBarAction(
+                                    label: 'Undo',
+                                    onPressed: () {
+                                      setState(() {
+                                        _completedTasks.insert(index, task);
+                                        _incompleteTasks.remove(task);
+                                        task['completed'] = true;
+                                        _saveTasks();
+                                      });
+                                    },
+                                  ),
+                                ),
+                              );
+                            },
+                            background: Container(color: Colors.red),
+                            child: ListTile(
+                              leading: Checkbox(
+                                value: task['completed'],
+                                onChanged: (bool? value) {
+                                  _toggleTaskIncompletion(index);
+                                },
+                              ),
+                              title: Text(
+                                task['name'],
+                                style: TextStyle(
+                                  decoration: TextDecoration.lineThrough,
+                                ),
+                              ),
+                            ),
+                          );
+                        }).toList(),
                       ),
-                      title: Text(
-                        _completedTasks[index]['name'],
-                        style: TextStyle(
-                          decoration: TextDecoration.lineThrough,
-                        ),
-                      ),
+                      isExpanded: _isExpandedList[0],
                     ),
-                  );
-                },
+                  ],
+                ),
               ),
             ),
           ],
