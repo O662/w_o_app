@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:w_o/routineSelection.dart';
+import 'package:w_o/routine_selection.dart';
 import 'package:w_o/signup_page.dart';
 import 'package:w_o/login_page.dart';
 

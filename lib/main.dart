@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'impulse.dart'; // Import ImpulsePage
 import 'study.dart'; // Import StudyPage
-import 'routineSelection.dart'; // Import RoutineSelectionPage
+import 'routine_selection.dart'; // Import RoutineSelectionPage
 import 'workout.dart'; // Import WorkoutPage
 import 'profile_page.dart'; // Import the ProfilePage
-import 'signup_page.dart'; // Import SignupPage
-import 'login_page.dart'; // Import LoginPage
 import 'home_components/routine_recommendation.dart';
 import 'home_components/quick_action_row.dart'; // Import QuickActionRow
 import 'package:shared_preferences/shared_preferences.dart';
@@ -44,7 +42,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
   File? _profileImage;
-  String _greetingMessage = '';
 
   static final List<Widget> _widgetOptions = <Widget>[
     HomePage(), // Add the HomePage
@@ -80,35 +77,6 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _selectedIndex = index;
     });
-  }
-
-  Future<void> _loadGreetingMessage() async {
-    final prefs = await SharedPreferences.getInstance();
-    final firstName = prefs.getString('firstName') ?? '';
-    final hour = DateTime.now().hour;
-    String greeting;
-    if (hour < 12) {
-      greeting = 'Good morning';
-    } else if (hour < 18) {
-      greeting = 'Good afternoon';
-    } else {
-      greeting = 'Good evening';
-    }
-    setState(() {
-      _greetingMessage =
-          firstName.isNotEmpty ? '$greeting, $firstName.' : '$greeting.';
-    });
-  }
-
-  String _getRoutineRecommendation() {
-    final hour = DateTime.now().hour;
-    if (hour >= 3 && hour < 10) {
-      return 'We recommend starting your morning routine!';
-    } else if (hour >= 18 || hour < 3) {
-      return "It's getting late. \nWe recommend starting your evening routine!";
-    } else {
-      return 'No specific routine recommended at this time.';
-    }
   }
 
   @override

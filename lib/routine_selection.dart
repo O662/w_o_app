@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'morningRoutine.dart'; // Import MorningRoutinePage
-import 'eveningRoutine.dart'; // Import EveningRoutinePage
+import 'morning_routine.dart'; // Import MorningRoutinePage
+import 'evening_routine.dart'; // Import EveningRoutinePage
 
 class RoutineSelection extends StatelessWidget {
   @override

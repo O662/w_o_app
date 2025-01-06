@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:w_o/runningTimerPage.dart';
-import 'runningPlan.dart'; // Import RunningPlanPage
+import 'package:w_o/running_timer_page.dart';
+import 'running_plan.dart'; // Import RunningPlanPage
 import 'dart:async'; // Import Timer class
 
 class RunningPage extends StatefulWidget {

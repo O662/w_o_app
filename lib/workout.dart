@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'runningPage.dart'; // Import RunningPage
-import 'runningPlan.dart'; // Import RunningPlanPage
+import 'running_page.dart'; // Import RunningPage
+import 'running_plan.dart'; // Import RunningPlanPage
 
 class WorkoutPage extends StatelessWidget {
   @override
