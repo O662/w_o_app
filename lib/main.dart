@@ -41,6 +41,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
   File? _profileImage;
+  String _greetingMessage = '';
 
   static final List<Widget> _widgetOptions = <Widget>[
     HomePage(), // Add the HomePage
@@ -78,12 +79,29 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  Future<void> _loadGreetingMessage() async {
+    final prefs = await SharedPreferences.getInstance();
+    final firstName = prefs.getString('firstName') ?? '';
+    final hour = DateTime.now().hour;
+    String greeting;
+    if (hour < 12) {
+      greeting = 'Good morning';
+    } else if (hour < 18) {
+      greeting = 'Good afternoon';
+    } else {
+      greeting = 'Good evening';
+    }
+    setState(() {
+      _greetingMessage = firstName.isNotEmpty ? '$greeting, $firstName.' : '$greeting.';
+    });
+  }
+
   String _getRoutineRecommendation() {
     final hour = DateTime.now().hour;
     if (hour >= 3 && hour < 10) {
       return 'We recommend starting your morning routine!';
     } else if (hour >= 18 || hour < 3) {
-      return 'We recommend starting your evening routine!';
+      return "It's getting late. \nWe recommend starting your evening routine!";
     } else {
       return 'No specific routine recommended at this time.';
     }
@@ -180,7 +198,7 @@ class _HomePageState extends State<HomePage> {
     if (hour >= 3 && hour < 10) {
       return 'We recommend starting your morning routine!';
     } else if (hour >= 18 || hour < 3) {
-      return "It's getting late. \nWe recommend starting your evening routine!";
+      return "It's getting late. \nLet's start your evening routine. 🌛";
     } else {
       return 'No specific routine recommended at this time.';
     }
@@ -189,49 +207,71 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          Align(
-            alignment: Alignment.topLeft,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    _greetingMessage,
-                    style: TextStyle(fontSize: 24),
-                  ),
-                  SizedBox(height: 8),
-                  Row(
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => RoutineSelection()),
-                          );
-                        },
-                        child: Text('Routines'),
-                      ),
-                      // Add more buttons here if needed
-                    ],
-                  ),
-                  SizedBox(height: 16),
-                  Card(
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  _greetingMessage,
+                  style: TextStyle(fontSize: 24),
+                ),
+                SizedBox(height: 8),
+                Row(
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => RoutineSelection()),
+                        );
+                      },
+                      child: Text('Routines'),
+                    ),
+                    // Add more buttons here if needed
+                  ],
+                ),
+                SizedBox(height: 16),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => RoutineSelection()), // Replace with your evening routine page
+                    );
+                  },
+                  child: Card(
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
-                      child: Text(
-                        _routineRecommendation,
-                        style: TextStyle(fontSize: 18),
+                      child: Column(
+                        children: [
+                          if (DateTime.now().hour >= 18 || DateTime.now().hour < 3)
+                            AspectRatio(
+                              aspectRatio: 2 / 1, // Width to height ratio of 2:1
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: AssetImage('assets/icon/routine_images/night.png'),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          Text(
+                            _routineRecommendation,
+                            style: TextStyle(fontSize: 18),
+                            textAlign: TextAlign.left, // Align text to the left
+                          ),
+                        ],
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }

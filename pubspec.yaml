@@ -29,11 +29,10 @@ flutter_icons:
 
 flutter:
   uses-material-design: true
-
   assets:
     # Icon
     - assets/icon/mLogo.png
     #Profile Pictures
     - assets/icon/profile_pictures/default_profile_picture.png
     #Routine Images
-    - assets/icon/routine_images/night.png
+    - assets\icon\routine_images\night.png
