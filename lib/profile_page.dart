@@ -86,63 +86,44 @@ class _ProfilePageState extends State<ProfilePage> {
               Expanded(
                 child: TabBarView(
                   children: [
-                    Center(
-                      child: Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: SizedBox(
-                            width: double.infinity,
-                            child: ElevatedButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => InfoPage()),
-                                );
-                              },
-                              style: ElevatedButton.styleFrom(
-                                minimumSize: Size(double.infinity,
-                                    50), // Set the height to 50
-                                shape: RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.circular(5), // Rounded edges
-                                ),
-                              ),
-                              child: Text('Edit Profile.'),
+                    // Profile Tab
+                    ListView(
+                      children: [
+                        ExpansionTile(
+                          title: Text('Personal Information'),
+                          children: [
+                            ListTile(
+                              title: Text('First Name: $_firstName'),
                             ),
-                          ),
+                            ListTile(
+                              title: Text('Last Name: $_lastName'),
+                            ),
+                            // Add more personal information here
+                          ],
                         ),
-                      ),
+                        // Add more widgets for the profile tab here
+                      ],
                     ),
-                    Center(
-                      child: Align(
-                        alignment: Alignment.topCenter,
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: SizedBox(
-                            width: double.infinity,
-                            child: ElevatedButton(
-                              onPressed: () {
+                    // Settings Tab
+                    ListView(
+                      children: [
+                        ExpansionTile(
+                          title: Text('Settings'),
+                          children: [
+                            ListTile(
+                              title: Text('App Settings'),
+                              onTap: () {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => InfoPage()),
                                 );
                               },
-                              style: ElevatedButton.styleFrom(
-                                minimumSize: Size(double.infinity,
-                                    100), // Set the height to 50
-                                shape: RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.circular(5), // Rounded edges
-                                ),
-                              ),
-                              child: Text('App Settings.'),
                             ),
-                          ),
+                            // Add more settings here
+                          ],
                         ),
-                      ),
+                      ],
                     ),
                   ],
                 ),
