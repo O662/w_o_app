@@ -17,4 +17,17 @@ class WeatherService {
       throw Exception('Failed to load weather data');
     }
   }
+
+  Future<Map<String, dynamic>> fetchWeatherByCoordinates(double latitude, double longitude) async {
+    final response = await http.get(Uri.parse('$apiUrl?lat=$latitude&lon=$longitude&appid=$apiKey&units=metric'));
+
+    print('Response status: ${response.statusCode}');
+    print('Response body: ${response.body}');
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to load weather data');
+    }
+  }
 }

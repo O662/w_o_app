@@ -17,6 +17,7 @@ dependencies:
   image_picker: ^0.8.4+4
   http: ^0.13.3
   weather: ^2.0.1
+  geolocator: ^8.2.0
 
 
 dev_dependencies:

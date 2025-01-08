@@ -9,6 +9,7 @@ import 'home_components/quick_action_row.dart'; // Import QuickActionRow
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io';
 import 'weather_service.dart';
+import 'package:geolocator/geolocator.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -255,7 +256,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
 class WeatherPage extends StatefulWidget {
   const WeatherPage({super.key});
 
@@ -265,23 +265,50 @@ class WeatherPage extends StatefulWidget {
 
 class _WeatherPageState extends State<WeatherPage> {
   final WeatherService _weatherService = WeatherService();
-  String _city = 'London';
+  Position? _currentPosition;
   Map<String, dynamic>? _weatherData;
 
   @override
   void initState() {
     super.initState();
+    _getCurrentLocation();
+  }
+
+  Future<void> _getCurrentLocation() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return Future.error('Location services are disabled.');
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error('Location permissions are denied');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      return Future.error('Location permissions are permanently denied, we cannot request permissions.');
+    }
+
+    _currentPosition = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     _fetchWeather();
   }
 
   Future<void> _fetchWeather() async {
-    try {
-      final data = await _weatherService.fetchWeather(_city);
-      setState(() {
-        _weatherData = data;
-      });
-    } catch (e) {
-      print('Error fetching weather data: $e');
+    if (_currentPosition != null) {
+      try {
+        final data = await _weatherService.fetchWeatherByCoordinates(_currentPosition!.latitude, _currentPosition!.longitude);
+        setState(() {
+          _weatherData = data;
+        });
+      } catch (e) {
+        print('Error fetching weather data: $e');
+      }
     }
   }
 
@@ -289,11 +316,11 @@ class _WeatherPageState extends State<WeatherPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Weather in $_city'),
+        title: const Text('Weather at Your Location'),
       ),
       body: Center(
         child: _weatherData == null
-            ? CircularProgressIndicator()
+            ? const CircularProgressIndicator()
             : Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
