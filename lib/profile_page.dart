@@ -101,8 +101,57 @@ class _ProfilePageState extends State<ProfilePage> {
                             // Add more personal information here
                           ],
                         ),
+                        ExpansionTile(
+                          title: Text('Health Information'),
+                          children: [
+                            ListTile(
+                              title: Text('First Name: $_firstName'),
+                            ),
+                            ListTile(
+                              title: Text('Last Name: $_lastName'),
+                            ),
+                            // Add more personal information here
+                          ],
+                        ),
+                        ExpansionTile(
+                          title: Text('Meal Information'),
+                          children: [
+                            ListTile(
+                              title: Text('First Name: $_firstName'),
+                            ),
+                            ListTile(
+                              title: Text('Last Name: $_lastName'),
+                            ),
+                            // Add more personal information here
+                          ],
+                        ),
+                        ExpansionTile(
+                          title: Text('Focus Information'),
+                          children: [
+                            ListTile(
+                              title: Text('First Name: $_firstName'),
+                            ),
+                            ListTile(
+                              title: Text('Last Name: $_lastName'),
+                            ),
+                            // Add more personal information here
+                          ],
+                        ),
+                        ExpansionTile(
+                          title: Text('Finance Information'),
+                          children: [
+                            ListTile(
+                              title: Text('First Name: $_firstName'),
+                            ),
+                            ListTile(
+                              title: Text('Last Name: $_lastName'),
+                            ),
+                            // Add more personal information here
+                          ],
+                        ),
                         // Add more widgets for the profile tab here
                       ],
+                      
                     ),
                     // Settings Tab
                     ListView(
