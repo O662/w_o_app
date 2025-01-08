@@ -15,6 +15,9 @@ dependencies:
   cupertino_icons: ^1.0.8
   flutter_colorpicker: ^1.0.3
   image_picker: ^0.8.4+4
+  http: ^0.13.3
+  weather: ^2.0.1
+
 
 dev_dependencies:
   flutter_test:

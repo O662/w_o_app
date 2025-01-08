@@ -8,6 +8,7 @@ import 'home_components/routine_recommendation.dart';
 import 'home_components/quick_action_row.dart'; // Import QuickActionRow
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io';
+import 'weather_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -48,6 +49,7 @@ class _MyHomePageState extends State<MyHomePage> {
     WorkoutPage(), // Add the WorkoutPage next to HomePage
     ImpulsePage(), // Add the ImpulsePage
     StudyPage(), // Add the StudyPage
+    WeatherPage(), // Add the WeatherPage
   ];
 
   static final List<String> _pageTitles = <String>[
@@ -55,6 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
     'Workout',
     'Impulse',
     'Study',
+    'Weather',
   ];
 
   @override
@@ -123,6 +126,10 @@ class _MyHomePageState extends State<MyHomePage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.book),
             label: 'Study',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.cloud),
+            label: 'Weather',
           ),
         ],
         currentIndex: _selectedIndex,
@@ -244,6 +251,56 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class WeatherPage extends StatefulWidget {
+  const WeatherPage({super.key});
+
+  @override
+  _WeatherPageState createState() => _WeatherPageState();
+}
+
+class _WeatherPageState extends State<WeatherPage> {
+  final WeatherService _weatherService = WeatherService();
+  String _city = 'London';
+  Map<String, dynamic>? _weatherData;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchWeather();
+  }
+
+  Future<void> _fetchWeather() async {
+    try {
+      final data = await _weatherService.fetchWeather(_city);
+      setState(() {
+        _weatherData = data;
+      });
+    } catch (e) {
+      print('Error fetching weather data: $e');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Weather in $_city'),
+      ),
+      body: Center(
+        child: _weatherData == null
+            ? CircularProgressIndicator()
+            : Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Temperature: ${_weatherData!['main']['temp']}°C'),
+                  Text('Weather: ${_weatherData!['weather'][0]['description']}'),
+                ],
+              ),
       ),
     );
   }
