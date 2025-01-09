@@ -1,37 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:w_o/services/auth_service.dart';
 
-class SignupPage extends StatefulWidget {
-  const SignupPage({super.key});
-
+class SignUpPage extends StatefulWidget {
   @override
-  _SignupPageState createState() => _SignupPageState();
+  _SignUpPageState createState() => _SignUpPageState();
 }
 
-class _SignupPageState extends State<SignupPage> {
+class _SignUpPageState extends State<SignUpPage> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-
-  @override
-  void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
-    super.dispose();
-  }
-
-  void _signup() {
-    if (_formKey.currentState!.validate()) {
-      // Perform signup logic
-      print('Email: ${_emailController.text}');
-      print('Password: ${_passwordController.text}');
-    }
-  }
+  final AuthService _authService = AuthService();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Signup'),
+        title: Text('Sign Up'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -62,8 +47,25 @@ class _SignupPageState extends State<SignupPage> {
               ),
               SizedBox(height: 20),
               ElevatedButton(
-                onPressed: _signup,
-                child: Text('Signup'),
+                onPressed: () async {
+                  if (_formKey.currentState!.validate()) {
+                    try {
+                      await _authService.signup(
+                        email: _emailController.text,
+                        password: _passwordController.text,
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Sign up successful')),
+                      );
+                      // Navigate to another page if needed
+                    } catch (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(e.toString())),
+                      );
+                    }
+                  }
+                },
+                child: Text('Sign Up'),
               ),
             ],
           ),

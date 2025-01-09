@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:w_o/routine_selection.dart';
-import 'package:w_o/signup_page.dart';
+import 'package:w_o/pages/signup_page.dart';
 import 'package:w_o/login_page.dart';
 
 class QuickActionRow extends StatelessWidget {
@@ -26,7 +26,7 @@ class QuickActionRow extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => SignupPage()),
+                MaterialPageRoute(builder: (context) => SignUpPage()),
               );
             },
             child: Text('Go to Signup Page'),

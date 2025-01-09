@@ -12,10 +12,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io';
 import 'weather_service.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:w_o/pages/signup_page.dart'; // Import the SignUpPage
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
 }
