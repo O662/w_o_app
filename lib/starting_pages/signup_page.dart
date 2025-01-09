@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:w_o/services/auth_service.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -15,6 +16,11 @@ class _SignUpPageState extends State<SignUpPage> {
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
   final AuthService _authService = AuthService();
+
+  Future<void> _setLoginStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isLoggedIn', true);
+  }
 
   void _nextPage() {
     if (_formKey.currentState!.validate()) {
@@ -43,7 +49,8 @@ class _SignUpPageState extends State<SignUpPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Sign up successful')),
         );
-        Navigator.pushReplacementNamed(context, '/login');
+        await _setLoginStatus();
+        Navigator.pushReplacementNamed(context, '/home');
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(e.toString())),

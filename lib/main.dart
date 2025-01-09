@@ -26,23 +26,38 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
+  Future<bool> _checkLoginStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getBool('isLoggedIn') ?? false;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'MyApp',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color.fromARGB(255, 58, 183, 143)),
-        useMaterial3: true,
-      ),
-      initialRoute: '/', // Set initial route to welcome page
-      routes: {
-        '/': (context) => WelcomePage(),
-        '/login': (context) => LoginPage(),
-        '/signup': (context) => SignUpPage(),
-        '/home': (context) => MyHomePage(),
+    return FutureBuilder<bool>(
+      future: _checkLoginStatus(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator();
+        } else {
+          bool isLoggedIn = snapshot.data ?? false;
+          return MaterialApp(
+            title: 'MyApp',
+            theme: ThemeData(
+              colorScheme: ColorScheme.fromSeed(
+                  seedColor: const Color.fromARGB(255, 58, 183, 143)),
+              useMaterial3: true,
+            ),
+            initialRoute: isLoggedIn ? '/home' : '/', // Set initial route based on login status
+            routes: {
+              '/': (context) => WelcomePage(),
+              '/login': (context) => LoginPage(),
+              '/signup': (context) => SignUpPage(),
+              '/home': (context) => MyHomePage(),
+            },
+            debugShowCheckedModeBanner: false, // Remove the debug banner
+          );
+        }
       },
-      debugShowCheckedModeBanner: false, // Remove the debug banner
     );
   }
 }

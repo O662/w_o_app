@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:w_o/services/auth_service.dart';
 import '../main.dart'; // Import MyHomePage
 
@@ -12,6 +13,11 @@ class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final AuthService _authService = AuthService();
+
+  Future<void> _setLoginStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isLoggedIn', true);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,11 +64,8 @@ class _LoginPageState extends State<LoginPage> {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text('Login successful')),
                       );
-                      // Navigate to MyHomePage
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => MyHomePage()),
-                      );
+                      await _setLoginStatus();
+                      Navigator.pushReplacementNamed(context, '/home');
                     } catch (e) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text(e.toString())),
