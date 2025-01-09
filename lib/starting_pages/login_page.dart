@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:w_o/services/auth_service.dart';
-import '../main.dart'; // Import MyHomePage
 
 class LoginPage extends StatefulWidget {
   @override

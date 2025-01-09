@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:io';
 import 'info_page.dart'; // Import the InfoPage
 
@@ -21,16 +23,22 @@ class _ProfilePageState extends State<ProfilePage> {
     _loadUserInfo();
   }
 
-  Future<void> _loadUserInfo() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _firstName = prefs.getString('firstName') ?? '';
-      _lastName = prefs.getString('lastName') ?? '';
-      String? profileImagePath = prefs.getString('profileImage');
+ Future<void> _loadUserInfo() async {
+  final prefs = await SharedPreferences.getInstance();
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+      if (userDoc.exists) {
+        setState(() {
+          _firstName = userDoc['firstName'];
+          _lastName = userDoc['lastName'];
+          String? profileImagePath = prefs.getString('profileImage');
       if (profileImagePath != null) {
         _profileImage = File(profileImagePath);
       }
-    });
+        });
+      }
+    }
   }
 
   @override

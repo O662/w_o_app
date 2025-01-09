@@ -20,12 +20,12 @@ dependencies:
   geolocator: ^8.2.0
   firebase_core: ^3.10.0
   firebase_auth: ^5.4.0
-
+  cloud_firestore: ^5.6.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^5.0.0
+  flutter_lints: ^2.0.0
   flutter_launcher_icons: ^0.9.2
 
 flutter_icons:
@@ -38,7 +38,7 @@ flutter:
   assets:
     # Icon
     - assets/icon/mLogo.png
-    #Profile Pictures
+    # Profile Pictures
     - assets/icon/profile_pictures/default_profile_picture.png
-    #Routine Images
-    - assets\icon\routine_images\night.png
+    # Routine Images
+    - assets/icon/routine_images/night.png

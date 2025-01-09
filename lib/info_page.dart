@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:io';
 
 class InfoPage extends StatefulWidget {
@@ -33,6 +35,18 @@ class _InfoPageState extends State<InfoPage> {
         _profileImage = File(profileImagePath);
       }
     });
+
+    // Load user info from Firestore
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+      if (userDoc.exists) {
+        setState(() {
+          _firstNameController.text = userDoc['firstName'];
+          _lastNameController.text = userDoc['lastName'];
+        });
+      }
+    }
   }
 
   Future<void> _saveUserInfo() async {
@@ -44,18 +58,18 @@ class _InfoPageState extends State<InfoPage> {
       await prefs.setString('profileImage', _profileImage!.path);
     }
 
+    // Save user info to Firestore
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      await FirebaseFirestore.instance.collection('users').doc(user.uid).update({
+        'firstName': _firstNameController.text,
+        'lastName': _lastNameController.text,
+      });
+    }
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Saved!')),
     );
-  }
-
-  Future<void> _pickImage() async {
-    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _profileImage = File(pickedFile.path);
-      });
-    }
   }
 
   @override
@@ -68,45 +82,38 @@ class _InfoPageState extends State<InfoPage> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            GestureDetector(
-              onTap: _pickImage,
-              child: CircleAvatar(
-                radius: 40,
-                backgroundImage: _profileImage != null
-                    ? FileImage(_profileImage!)
-                    : AssetImage('assets/icon/profile_pictures/default_profile_picture.png') as ImageProvider,
-              ),
-            ),
-            SizedBox(height: 16),
-            TextField(
+            TextFormField(
               controller: _firstNameController,
               decoration: InputDecoration(labelText: 'First Name'),
             ),
-            TextField(
+            TextFormField(
               controller: _lastNameController,
               decoration: InputDecoration(labelText: 'Last Name'),
             ),
-            DropdownButton<String>(
+            DropdownButtonFormField<String>(
               value: _gender,
-              onChanged: (String? newValue) {
+              items: [
+                DropdownMenuItem(
+                  child: Text('Male'),
+                  value: 'Male',
+                ),
+                DropdownMenuItem(
+                  child: Text('Female'),
+                  value: 'Female',
+                ),
+                DropdownMenuItem(
+                  child: Text('Prefer not to share'),
+                  value: 'Prefer not to share',
+                ),
+              ],
+              onChanged: (value) {
                 setState(() {
-                  _gender = newValue!;
+                  _gender = value!;
                 });
               },
-              items: <String>[
-                'Prefer not to share',
-                'Male',
-                'Female',
-                'X/Non-binary',
-                'Trans-Male',
-                'Trans-Female'
-              ].map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
+              decoration: InputDecoration(labelText: 'Gender'),
             ),
+            SizedBox(height: 20),
             ElevatedButton(
               onPressed: _saveUserInfo,
               child: Text('Save'),

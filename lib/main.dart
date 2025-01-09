@@ -15,6 +15,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io';
 import 'weather_service.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -72,6 +74,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
   File? _profileImage;
+  String _firstName = '';
+  String _lastName = '';
 
   static final List<Widget> _widgetOptions = <Widget>[
     HomePage(), // Add the HomePage
@@ -96,12 +100,20 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> _loadUserInfo() async {
-    final prefs = await SharedPreferences.getInstance();
-    String? profileImagePath = prefs.getString('profileImage');
-    if (profileImagePath != null) {
-      setState(() {
-        _profileImage = File(profileImagePath);
-      });
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+      if (userDoc.exists) {
+        setState(() {
+          _firstName = userDoc['firstName'];
+          _lastName = userDoc['lastName'];
+        });
+        print('User info loaded: $_firstName $_lastName');
+      } else {
+        print('User document does not exist');
+      }
+    } else {
+      print('No user is currently signed in');
     }
   }
 
@@ -180,6 +192,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   String _greetingMessage = '';
   String _routineRecommendation = '';
+  String _firstName = '';
 
   @override
   void initState() {
@@ -189,8 +202,13 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _loadGreetingMessage() async {
-    final prefs = await SharedPreferences.getInstance();
-    final firstName = prefs.getString('firstName') ?? '';
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+      if (userDoc.exists) {
+        _firstName = userDoc['firstName'];
+      }
+    }
     final hour = DateTime.now().hour;
     String greeting;
     if (hour < 12) {
@@ -202,7 +220,7 @@ class _HomePageState extends State<HomePage> {
     }
     setState(() {
       _greetingMessage =
-          firstName.isNotEmpty ? '$greeting, $firstName.' : '$greeting.';
+          _firstName.isNotEmpty ? '$greeting, $_firstName.' : '$greeting.';
     });
   }
 

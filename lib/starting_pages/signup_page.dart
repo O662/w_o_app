@@ -22,6 +22,12 @@ class _SignUpPageState extends State<SignUpPage> {
     await prefs.setBool('isLoggedIn', true);
   }
 
+  Future<void> _saveUserName() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('firstName', _firstNameController.text);
+    await prefs.setString('lastName', _lastNameController.text);
+  }
+
   void _nextPage() {
     if (_formKey.currentState!.validate()) {
       _pageController.nextPage(
@@ -50,8 +56,10 @@ class _SignUpPageState extends State<SignUpPage> {
           SnackBar(content: Text('Sign up successful')),
         );
         await _setLoginStatus();
+        await _saveUserName();
         Navigator.pushReplacementNamed(context, '/home');
       } catch (e) {
+        print('SignUp Error: $e');
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(e.toString())),
         );
