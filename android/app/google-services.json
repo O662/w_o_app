@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1095982317804",
+    "project_id": "w-oapp",
+    "storage_bucket": "w-oapp.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1095982317804:android:c165c6368c2810debe65c9",
+        "android_client_info": {
+          "package_name": "com.example.w_oapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDvIsWiocgotSLIylKcrqvNNwQ4r--IUKw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

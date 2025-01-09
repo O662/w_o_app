@@ -18,6 +18,7 @@ dependencies:
   http: ^0.13.3
   weather: ^2.0.1
   geolocator: ^8.2.0
+  firebase_core: ^3.10.0
 
 
 dev_dependencies:

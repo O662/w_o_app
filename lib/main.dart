@@ -1,4 +1,6 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:w_o/firebase_options.dart';
 import 'impulse.dart'; // Import ImpulsePage
 import 'study.dart'; // Import StudyPage
 import 'routine_selection.dart'; // Import RoutineSelectionPage
@@ -11,8 +13,10 @@ import 'dart:io';
 import 'weather_service.dart';
 import 'package:geolocator/geolocator.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
 }
 
