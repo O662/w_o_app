@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:w_o/routine_selection.dart';
-import 'package:w_o/pages/signup_page.dart';
-import 'package:w_o/pages/login_page.dart'; 
+import 'package:w_o/starting_pages/signup_page.dart';
+import 'package:w_o/starting_pages/login_page.dart'; 
 
 class QuickActionRow extends StatelessWidget {
   const QuickActionRow({super.key});

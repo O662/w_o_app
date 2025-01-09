@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:w_o/services/auth_service.dart';
+import '../main.dart'; // Import MyHomePage
 
 class LoginPage extends StatefulWidget {
   @override
@@ -57,7 +58,11 @@ class _LoginPageState extends State<LoginPage> {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text('Login successful')),
                       );
-                      // Navigate to another page if needed
+                      // Navigate to MyHomePage
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => MyHomePage()),
+                      );
                     } catch (e) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text(e.toString())),

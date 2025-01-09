@@ -1,6 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:w_o/firebase_options.dart';
+import 'starting_pages/login_page.dart'; // Import LoginPage
+import 'starting_pages/signup_page.dart'; // Import SignUpPage
+import 'starting_pages/welcome_page.dart'; // Import WelcomePage
 import 'impulse.dart'; // Import ImpulsePage
 import 'study.dart'; // Import StudyPage
 import 'routine_selection.dart'; // Import RoutineSelectionPage
@@ -12,7 +15,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io';
 import 'weather_service.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:w_o/pages/signup_page.dart'; // Import the SignUpPage
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,7 +35,13 @@ class MyApp extends StatelessWidget {
             seedColor: const Color.fromARGB(255, 58, 183, 143)),
         useMaterial3: true,
       ),
-      home: const MyHomePage(),
+      initialRoute: '/', // Set initial route to welcome page
+      routes: {
+        '/': (context) => WelcomePage(),
+        '/login': (context) => LoginPage(),
+        '/signup': (context) => SignUpPage(),
+        '/home': (context) => MyHomePage(),
+      },
       debugShowCheckedModeBanner: false, // Remove the debug banner
     );
   }
