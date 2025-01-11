@@ -1,5 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.w_oapp">
+    <uses-sdk android:minSdkVersion="23" /> <!-- Add this line -->
+    
     <application
         android:label="w_o"
         android:name="${applicationName}"
